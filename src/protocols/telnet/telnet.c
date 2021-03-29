@@ -354,7 +354,7 @@ int replace_crlf(char* src, int bufferSize, int readSize) {
         if (srcIndex >= bufferSize)
             return -1;
 
-        if (backBuffer[i] == 0x0d) {
+        if (backBuffer[i] == 0x0d && (backBuffer[i + 1] != 0x0a || i + 1 == readSize)) {
             src[srcIndex] = backBuffer[i];
             src[srcIndex + 1] = 0x0a;
             srcIndex += 2;
