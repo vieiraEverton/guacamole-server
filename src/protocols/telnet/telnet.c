@@ -338,6 +338,33 @@ static void __guac_telnet_event_handler(telnet_t* telnet, telnet_event_t* event,
     }
 
 }
+/**
+ * This function replaces all \ r with \ r \ n
+ *
+ * @param bufferSize, readSize, src.
+ * @return new readSize.
+ */
+int replace_crlf(char* src, int bufferSize, int readSize) {
+    int i, srcIndex = 0;
+    char backBuffer[bufferSize + 1];
+    memcpy(&backBuffer, src, bufferSize);
+    backBuffer[bufferSize] = 0x00;
+
+    for (i = 0; i < readSize; i++) {
+        if (srcIndex >= bufferSize)
+            return -1;
+
+        if (backBuffer[i] == 0x0d) {
+            src[srcIndex] = backBuffer[i];
+            src[srcIndex + 1] = 0x0a;
+            srcIndex += 2;
+        } else {
+            src[srcIndex] = backBuffer[i];
+            srcIndex++;
+        }
+    }
+    return srcIndex;
+}
 
 /**
  * Input thread, started by the main telnet client thread. This thread
@@ -357,6 +384,7 @@ static void* __guac_telnet_input_thread(void* data) {
 
     /* Write all data read */
     while ((bytes_read = guac_terminal_read_stdin(telnet_client->term, buffer, sizeof(buffer))) > 0) {
+        bytes_read = replace_crlf(buffer, sizeof(buffer), bytes_read);
         telnet_send(telnet_client->telnet, buffer, bytes_read);
         if (telnet_client->echo_enabled)
             guac_terminal_write(telnet_client->term, buffer, bytes_read);
