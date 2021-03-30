@@ -341,30 +341,28 @@ static void __guac_telnet_event_handler(telnet_t* telnet, telnet_event_t* event,
 /**
  * This function replaces all \ r with \ r \ n
  *
- * @param bufferSize, readSize, src.
+ * @param bufferSize, readSize, buffer_src.
  * @return new readSize.
  */
-int replace_crlf(char* src, int bufferSize, int readSize) {
-    int i, srcIndex = 0;
-    char backBuffer[bufferSize + 1];
-    memcpy(&backBuffer, src, bufferSize);
-    backBuffer[bufferSize] = 0x00;
-
-    for (i = 0; i < readSize; i++) {
-        if (srcIndex >= bufferSize)
-            return -1;
-
-        if (backBuffer[i] == 0x0d && (backBuffer[i + 1] != 0x0a || i + 1 == readSize)) {
-            src[srcIndex] = backBuffer[i];
-            src[srcIndex + 1] = 0x0a;
-            srcIndex += 2;
+int replace_crlf(char *buffer_dst, char *buffer_src, int len) {
+    int new_len = 0;
+    for (int i=0; i < len; i++) {
+        if (buffer_src[i] == '\r') {
+            buffer_dst[new_len++] = buffer_src[i];
+            if ((i + 1) >= len) {
+                buffer_dst[new_len++] = '\n';
+            } else {
+                if (buffer_src[i + 1] != '\n') {
+                    buffer_dst[new_len++] = '\n';
+                }
+            }
         } else {
-            src[srcIndex] = backBuffer[i];
-            srcIndex++;
+            buffer_dst[new_len++] = buffer_src[i];
         }
     }
-    return srcIndex;
+    return new_len;
 }
+
 
 /**
  * Input thread, started by the main telnet client thread. This thread
@@ -380,14 +378,15 @@ static void* __guac_telnet_input_thread(void* data) {
     guac_telnet_client* telnet_client = (guac_telnet_client*) client->data;
 
     char buffer[8192];
+    char buffer_dest[8192];
     int bytes_read;
 
     /* Write all data read */
     while ((bytes_read = guac_terminal_read_stdin(telnet_client->term, buffer, sizeof(buffer))) > 0) {
-        bytes_read = replace_crlf(buffer, sizeof(buffer), bytes_read);
-        telnet_send(telnet_client->telnet, buffer, bytes_read);
+        bytes_read = replace_crlf(buffer_dest, buffer, bytes_read);
+        telnet_send(telnet_client->telnet, buffer_dest, bytes_read);
         if (telnet_client->echo_enabled)
-            guac_terminal_write(telnet_client->term, buffer, bytes_read);
+            guac_terminal_write(telnet_client->term, buffer_dest, bytes_read);
     }
 
     return NULL;
