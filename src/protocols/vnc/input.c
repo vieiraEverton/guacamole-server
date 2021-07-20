@@ -58,8 +58,12 @@ int guac_vnc_user_key_handler(guac_user* user, int keysym, int pressed) {
                 keysym, pressed);
 
     /* Send VNC event only if finished connecting */
-    if (rfb_client != NULL)
+    if (rfb_client != NULL) {
+        if (keysym == 48) {
+            SendSW(rfb_client, 1, 1);
+        }
         SendKeyEvent(rfb_client, keysym, pressed);
+    }
 
     return 0;
 }
