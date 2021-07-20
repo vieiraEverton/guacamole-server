@@ -60,7 +60,7 @@ int guac_vnc_user_key_handler(guac_user* user, int keysym, int pressed) {
     /* Send VNC event only if finished connecting */
     if (rfb_client != NULL) {
         rfbClientLog("A tecla press é %d\n", (int) keysym);
-        if (keysym == 264) {
+        if (keysym == 65478) {
             SendSW(rfb_client, 1, 1);
         }
         SendKeyEvent(rfb_client, keysym, pressed);
