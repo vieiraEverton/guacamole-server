@@ -27,6 +27,13 @@
 #include <guacamole/user.h>
 #include <rfb/rfbclient.h>
 
+int __guac_vnc_user_key_event_handler(rfbClient* rfb_client, int keysym, int pressed){
+    if (keysym == 65489 && pressed == 0) // f20
+        SendSwEvent(rfb_client, 1, 1);
+    else if (keysym == 65490 && pressed == 0) // f21
+        SendCustomEvent(rfb_client, 1);
+}
+
 int guac_vnc_user_mouse_handler(guac_user* user, int x, int y, int mask) {
 
     guac_client* client = user->client;
@@ -59,10 +66,7 @@ int guac_vnc_user_key_handler(guac_user* user, int keysym, int pressed) {
 
     /* Send VNC event only if finished connecting */
     if (rfb_client != NULL) {
-        rfbClientLog("A tecla press é %d\n", (int) keysym);
-        if (keysym == 65478) {
-            SendSW(rfb_client, 1, 1);
-        }
+        __guac_vnc_user_key_event_handler(rfb_client, keysym, pressed);
         SendKeyEvent(rfb_client, keysym, pressed);
     }
 
