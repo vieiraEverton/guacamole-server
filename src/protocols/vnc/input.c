@@ -28,6 +28,7 @@
 #include <rfb/rfbclient.h>
 
 int __guac_vnc_user_key_event_handler(rfbClient* rfb_client, int keysym, int pressed){
+    rfbClientLog("key: %d press %d\n", keysym, pressed);
     if (keysym == 65489 && pressed == 0) // f20
         SendSwEvent(rfb_client, 1, 1);
     else if (keysym == 65490 && pressed == 0) // f21
