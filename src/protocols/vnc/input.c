@@ -32,6 +32,10 @@ int __guac_vnc_user_key_event_handler(rfbClient* rfb_client, int keysym, int pre
         SendSwEvent(rfb_client, 1, 1);
     else if (keysym == 65490 && pressed == 0) // f21
         SendCustomEvent(rfb_client, 1);
+    else
+        return 1
+
+    return 0
 }
 
 int guac_vnc_user_mouse_handler(guac_user* user, int x, int y, int mask) {
