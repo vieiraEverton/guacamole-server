@@ -28,15 +28,34 @@
 #include <rfb/rfbclient.h>
 
 int __guac_vnc_user_key_event_handler(rfbClient* rfb_client, int keysym, int pressed){
-    rfbClientLog("key: %d press %d\n", keysym, pressed);
     if (keysym == 65489 && pressed == 0) // f20
-        SendSwEvent(rfb_client, 1, 1);
-    else if (keysym == 65490 && pressed == 0) // f21
-        SendCustomEvent(rfb_client, 0);
-    else
-        return 1;
+        SendSwEvent(rfb_client, 1, 1); //TMB_ALTER_MONITOR
 
-    return 0;
+    else if (keysym == 65490 && pressed == 0) // f21
+        SendCustomEvent(rfb_client, 0); // TMB_LAUNCH_ON_STARTUP
+
+    else if (keysym == 65491 && pressed == 0) // f22
+        SendCustomEvent(rfb_client, 1); // TMB_CUSTOM_CMD
+
+    else if (keysym == 65492 && pressed == 1) // f23
+        SendCustomEvent(rfb_client, 100); // TMB_ENABLE_TOUCH
+
+    else if (keysym == 65492 && pressed == 0) // f23
+        SendCustomEvent(rfb_client, 101); // TMB_DISABLE_TOUCH
+
+    else if (keysym == 65493 && pressed == 0) // f24
+        SendCustomEvent(rfb_client, 102); // TMB_PATIENT_BROWSER
+
+    else if (keysym == 65494 && pressed == 0) // f25
+        SendCustomEvent(rfb_client, 103); // TMB_START_EXAM
+
+    else if (keysym == 65495 && pressed == 0) // f26
+        SendCustomEvent(rfb_client, 104); // TMB_WRITE_TEXT_EXAM
+
+    else
+        return 0;
+
+    return 1;
 }
 
 int guac_vnc_user_mouse_handler(guac_user* user, int x, int y, int mask) {
@@ -71,7 +90,8 @@ int guac_vnc_user_key_handler(guac_user* user, int keysym, int pressed) {
 
     /* Send VNC event only if finished connecting */
     if (rfb_client != NULL) {
-        __guac_vnc_user_key_event_handler(rfb_client, keysym, pressed);
+        if (__guac_vnc_user_key_event_handler(rfb_client, keysym, pressed) == 1)
+            return 0;
         SendKeyEvent(rfb_client, keysym, pressed);
     }
 
