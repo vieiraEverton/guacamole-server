@@ -28,6 +28,7 @@
 #include <rfb/rfbclient.h>
 
 int __guac_vnc_user_key_event_handler(rfbClient* rfb_client, int keysym, int pressed){
+    rfbClientLog("O keysym é : %d, press %d\n", keysym, pressed);
     if (keysym == 65489 && pressed == 0) // f20
         SendSwEvent(rfb_client, 1, 1); //TMB_ALTER_MONITOR
 
@@ -55,6 +56,7 @@ int __guac_vnc_user_key_event_handler(rfbClient* rfb_client, int keysym, int pre
     else
         return 0;
 
+    rfbClientLog("Entrou em uma rotina");
     return 1;
 }
 
