@@ -167,11 +167,11 @@ static int guac_vnc_wait_for_messages(rfbClient* rfb_client, int timeout) {
 }
 
 void* guac_vnc_client_thread(void* data) {
-    guac_client_log(client, GUAC_LOG_INFO, "TEST ESTOU NA THREAD VAMOS VER OS VALORES ");
     guac_client* client = (guac_client*) data;
     guac_vnc_client* vnc_client = (guac_vnc_client*) client->data;
     guac_vnc_settings* settings = vnc_client->settings;
 
+    guac_client_log(client, GUAC_LOG_INFO, "TEST ESTOU NA THREAD VAMOS VER OS VALORES ");
     /* Configure clipboard encoding */
     if (guac_vnc_set_clipboard_encoding(client, settings->clipboard_encoding)) {
         guac_client_log(client, GUAC_LOG_INFO, "Using non-standard VNC "
