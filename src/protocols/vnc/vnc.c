@@ -57,8 +57,6 @@ char* GUAC_VNC_CLIENT_KEY = "GUAC_VNC";
 
 rfbClient* guac_vnc_get_client(guac_client* client) {
 
-    guac_client_log(client, GUAC_LOG_INFO, "começando uma conexao definir parametros do capslock");
-
     rfbClient* rfb_client = rfbGetClient(8, 3, 4); /* 32-bpp client */
     guac_vnc_client* vnc_client = (guac_vnc_client*) client->data;
     guac_vnc_settings* vnc_settings = vnc_client->settings;
@@ -69,6 +67,9 @@ rfbClient* guac_vnc_get_client(guac_client* client) {
     /* Framebuffer update handler */
     rfb_client->GotFrameBufferUpdate = guac_vnc_update;
     rfb_client->GotCopyRect = guac_vnc_copyrect;
+
+    //Everton test
+    rfb_client->capsLockState = 0;
 
     /* Do not handle clipboard and local cursor if read-only */
     if (vnc_settings->read_only == 0) {
