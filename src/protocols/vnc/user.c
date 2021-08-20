@@ -59,9 +59,6 @@ int guac_vnc_user_join_handler(guac_user* user, int argc, char** argv) {
     /* Store settings at user level */
     user->data = settings;
 
-// Everton
-    guac_user_log(user, GUAC_LOG_INFO, "TESTE DE FLUXO.");
-
     /* Connect via VNC if owner */
     if (user->owner) {
 
