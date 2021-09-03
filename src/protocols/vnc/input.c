@@ -31,14 +31,14 @@ int __guac_vnc_user_key_event_handler(rfbClient* rfb_client, int keysym, int pre
     if (keysym == 65489 && pressed == 0) // f20
         SendSwEvent(rfb_client, 1, 1); //TMB_ALTER_MONITOR
 
-    else if (keysym == 65490 && pressed == 0) // f21
+    else if (keysym == 65490 && pressed == 1) // f21
         SendCustomEvent(rfb_client, 0); // TMB_LAUNCH_ON_STARTUP
 
-    else if (keysym == 65491 && pressed == 1) // f22
-        SendCustomEvent(rfb_client, 1); // TMB_CUSTOM_CMD
+    else if (keysym == 65490 && pressed == 0) // f21
+        SendCustomEvent(rfb_client, 2); // TMB_LAUNCH_ON_STARTUP
 
     else if (keysym == 65491 && pressed == 0) // f22
-        SendCustomEvent(rfb_client, 2); // TMB_CUSTOM_CMD
+        SendCustomEvent(rfb_client, 1); // TMB_CUSTOM_CMD
 
     else if (keysym == 65492 && pressed == 1) // f23
         SendCustomEvent(rfb_client, 100); // TMB_ENABLE_TOUCH
