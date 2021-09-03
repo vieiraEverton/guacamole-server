@@ -52,8 +52,11 @@ int __guac_vnc_user_key_event_handler(rfbClient* rfb_client, int keysym, int pre
     else if (keysym == 65495 && pressed == 0) // f26
         SendCustomEvent(rfb_client, 104); // TMB_WRITE_TEXT_EXAM
 
-    else if (keysym == 65496 && pressed == 0) // f26
-        SendCustomEvent(rfb_client, 105); // TMB_WRITE_TEXT_EXAM
+    else if (keysym == 65496 && pressed == 0) // f27
+        SendCustomEvent(rfb_client, 105); // Toggle button
+
+    else if (keysym == 65496 && pressed == 1) // f27
+        SendCustomEvent(rfb_client, 105); // Toggle button
 
     else
         return 0;
